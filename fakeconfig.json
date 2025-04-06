@@ -1,0 +1,11 @@
+{
+    "PB_API_KEY":"your pushbullet api key here",
+    "tom_creds":
+        {"email":"email@email.com",
+        "ut_password":"usertesting_pw",
+        "ub_password":"userbrain_pw"},
+    "kristine_creds":
+        {"email":"email@email.com",
+        "ut_password":"usertesting_pw",
+        "ub_password":"userbrain_pw"}
+}
