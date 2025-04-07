@@ -24,7 +24,7 @@ password = config[user]['ut_password']
 pb = Pushbullet(config['PB_API_KEY'])
 
 chrome_options = Options()
-# chrome_options.add_argument("--headless")  # Run headless
+chrome_options.add_argument("--headless")  # Run headless
 chrome_options.add_argument("--no-sandbox")  # Optional for laptop, required for Pi
 chrome_options.add_argument("--disable-dev-shm-usage")  # Optional, helps on low-memory systems
 
@@ -54,7 +54,7 @@ for char in password:
     time.sleep(random.uniform(0.01, 0.05))
 
 time.sleep(random.uniform(0.5, 2))  # Pause before clicking
-# logon_button.click()
+logon_button.click()
 # driver.get("https://app.usertesting.com/my_dashboard/available_tests_v3") #it goes there automatically
 
 time.sleep(5)
@@ -68,14 +68,15 @@ while True:
 
     tests = driver.find_elements(By.CLASS_NAME, "available-tests__tile")
     test_count = len(tests)
-    print(f"Found {test_count} test(s) available")        
     formatted_time = datetime.now().strftime('%I:%M %p')  # Format time as 12-hour clock with AM/PM
     if test_count>0:
+        print(f"Found {test_count} test(s) available!")        
         pb.push_note(f'UserTesting: {test_count}',f'{formatted_time}: {email}')
         print('waiting a bit for kristine to check it out', formatted_time)
         time.sleep(5*60) # 5 mins
     else:
         print(f'nothing rn... {formatted_time}')
+
     driver.refresh()
-    time.sleep(5+random.uniform(0.5, 2))  # Wait to observe
+    time.sleep(10+random.uniform(0.5, 2))  
 

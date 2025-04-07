@@ -56,6 +56,12 @@ time.sleep(5)
 
 while True:
     wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
+    
+    test_page = 'https://tester.userbrain.com/dashboard'
+    if driver.current_url!=test_page:
+        pb.push_note('Userbrain Script Error!',f'''Unexpected URL: {driver.current_url}\nExpected: {test_page}, {user}''')
+        raise Exception(f'''Unexpected URL: {driver.current_url}\nExpected: {test_page}, {user}''')
+    
     no_tests_elements = driver.find_elements(By.XPATH, "//div[@class='tiles__tile' and .//img[@src='https://tester.userbrain.com/img/no-test.png']]")
     formatted_time = datetime.now().strftime('%I:%M %p')  # Format time as 12-hour clock with AM/PM
     if len(no_tests_elements)==0:
@@ -65,5 +71,6 @@ while True:
         time.sleep(5*60) # 5 mins
     else:
         print(f'nothing rn... {formatted_time}')
+
     driver.refresh()
-    time.sleep(10+random.uniform(0.5, 2))  # Wait to observe
+    time.sleep(10+random.uniform(0.5, 2))  
