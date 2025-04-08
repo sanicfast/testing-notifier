@@ -5,10 +5,12 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 from pushbullet import Pushbullet 
 from datetime import datetime  # Import datetime module
 import json
 import sys
+import platform
 
 if len(sys.argv) < 2:
     print("Usage: python userbrain.py <name>")
@@ -28,7 +30,14 @@ chrome_options.add_argument("--headless")  # Run headless
 chrome_options.add_argument("--no-sandbox")  # Optional for laptop, required for Pi
 chrome_options.add_argument("--disable-dev-shm-usage")  # Optional, helps on low-memory systems
 
-driver = webdriver.Chrome(options=chrome_options)
+if 'Ubuntu' in platform.version():
+    driver = webdriver.Chrome(options=chrome_options)
+elif 'Debian' in platform.version():
+    driver = webdriver.Chrome(options=chrome_options, 
+                              service=Service('/snap/bin/chromium.chromedriver'))
+else:
+    raise Exception('Unsupported OS...')
+
 driver.get("https://tester.userbrain.com/auth/login")
 wait = WebDriverWait(driver, 10)
 
