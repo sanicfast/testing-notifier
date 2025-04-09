@@ -12,6 +12,8 @@ import json
 import sys
 import platform
 
+print(datetime.now())
+
 if len(sys.argv) < 2:
     print("Usage: python usertesting.py <name>")
     sys.exit(1)
