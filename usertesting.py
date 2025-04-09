@@ -67,7 +67,7 @@ logon_button.click()
 
 time.sleep(5)
 
-while True:
+while datetime.now().hour<23:
     wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
     test_page = 'https://app.usertesting.com/my_dashboard/available_tests_v3'
     if driver.current_url!=test_page:
@@ -87,4 +87,5 @@ while True:
 
     driver.refresh()
     time.sleep(10+random.uniform(0.5, 2))  
-
+else:
+    print('terminating because its time to go to bed')
