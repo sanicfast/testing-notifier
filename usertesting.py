@@ -26,6 +26,7 @@ with open('realconfig.json') as jason: # format in fakeconfig.json
 email = config[user]['email']
 password = config[user]['ut_password']
 pb = Pushbullet(config['PB_API_KEY'])
+pb.push_note(f'UserTesting','Script starting! {email} {datetime.now}')
 
 chrome_options = Options()
 chrome_options.add_argument("--headless")  # Run headless
@@ -40,7 +41,7 @@ elif 'Debian' in platform.version():
 else:
     raise Exception('Unsupported OS...')
 driver.get("https://auth.usertesting.com/signin")
-wait = WebDriverWait(driver, 10)
+wait = WebDriverWait(driver, 30)
 
 email_field = driver.find_element(By.ID, "okta-signin-username")
 pw_field = driver.find_element(By.ID, "okta-signin-password")
@@ -64,13 +65,19 @@ for char in password:
     time.sleep(random.uniform(0.01, 0.05))
 
 time.sleep(random.uniform(0.5, 2))  # Pause before clicking
+
+print('ut: logging in')
 logon_button.click()
 # driver.get("https://app.usertesting.com/my_dashboard/available_tests_v3") #it goes there automatically
 
 time.sleep(5)
-
+last_chirp = 0
 while datetime.now().hour<23:
-    wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
+    try:
+        wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
+    except:
+        driver.refresh()
+        continue
     test_page = 'https://app.usertesting.com/my_dashboard/available_tests_v3'
     if driver.current_url!=test_page:
         pb.push_note('UserTesting Script Error!',f'''Unexpected URL: {driver.current_url}\nExpected: {test_page}, {user}''')
@@ -89,5 +96,9 @@ while datetime.now().hour<23:
 
     driver.refresh()
     time.sleep(10+random.uniform(0.5, 2))  
+    if last_chirp + 3 <= datetime.now().hour:
+        last_chirp=datetime.now().hour
+        pb.push_note(f'UserTesting {email}','still running!')
 else:
     print('terminating because its time to go to bed')
+driver.quit()

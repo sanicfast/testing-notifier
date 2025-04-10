@@ -12,7 +12,7 @@ import json
 import sys
 import platform
 
-print(datetime.now())
+print('userbrain',datetime.now())
 
 if len(sys.argv) < 2:
     print("Usage: python userbrain.py <name>")
@@ -26,6 +26,8 @@ with open('realconfig.json') as jason: # format in fakeconfig.json
 email = config[user]['email']
 password = config[user]['ub_password']
 pb = Pushbullet(config['PB_API_KEY'])
+
+pb.push_note(f'UserBrain', 'Script Starting! {email} {datetime.now()}')
 
 chrome_options = Options()
 chrome_options.add_argument("--headless")  # Run headless
@@ -41,7 +43,7 @@ else:
     raise Exception('Unsupported OS...')
 
 driver.get("https://tester.userbrain.com/auth/login")
-wait = WebDriverWait(driver, 10)
+wait = WebDriverWait(driver, 30)
 
 cookies = driver.find_element(By.CSS_SELECTOR, "[data-type='necessary']")
 time.sleep(random.uniform(0.5, 2))  # Pause before clicking
@@ -61,13 +63,17 @@ for char in password:
     time.sleep(random.uniform(0.01, 0.05))  
 time.sleep(random.uniform(0.5, 2))  # Pause before clicking
 
+print('ub: logging in')
 logon_button.click()
-
 time.sleep(5)
-
+last_chirp=0
 while datetime.now().hour<23:
-    wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
-    
+    try:
+        wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
+    except:
+        driver.refresh()
+        continue
+
     test_page = 'https://tester.userbrain.com/dashboard'
     if driver.current_url!=test_page:
         pb.push_note('Userbrain Script Error!',f'''Unexpected URL: {driver.current_url}\nExpected: {test_page}, {user}''')
@@ -85,6 +91,10 @@ while datetime.now().hour<23:
 
     driver.refresh()
     time.sleep(10+random.uniform(0.5, 2))  
+    if last_chirp + 3 <= datetime.now().hour:
+        last_chirp=datetime.now().hour
+        pb.push_note(f'UserBrain {email}','still running!')
 else:
     print('terminating because it is bedtime')
    
+driver.quit()
