@@ -1,3 +1,4 @@
 realconfig.json
 *.pyc
 .venv
+*.log

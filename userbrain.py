@@ -27,7 +27,7 @@ email = config[user]['email']
 password = config[user]['ub_password']
 pb = Pushbullet(config['PB_API_KEY'])
 
-pb.push_note(f'UserBrain', 'Script Starting! {email} {datetime.now()}')
+pb.push_note(f'UserBrain', f'Script Starting! {email} {datetime.now()}')
 
 chrome_options = Options()
 chrome_options.add_argument("--headless")  # Run headless

@@ -26,7 +26,7 @@ with open('realconfig.json') as jason: # format in fakeconfig.json
 email = config[user]['email']
 password = config[user]['ut_password']
 pb = Pushbullet(config['PB_API_KEY'])
-pb.push_note(f'UserTesting','Script starting! {email} {datetime.now}')
+pb.push_note(f'UserTesting',f'Script starting! {email} {datetime.now}')
 
 chrome_options = Options()
 chrome_options.add_argument("--headless")  # Run headless
