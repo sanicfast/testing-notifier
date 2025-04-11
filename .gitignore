@@ -1,2 +1,3 @@
 realconfig.json
 *.pyc
+.venv
