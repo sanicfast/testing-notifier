@@ -36,7 +36,7 @@ chrome_options.add_argument("--disable-dev-shm-usage")  # Optional, helps on low
 
 if 'Ubuntu' in platform.version():
     driver = webdriver.Chrome(options=chrome_options)
-elif 'Debian' in platform.version():
+elif 'PREEMPT' in platform.version():
     driver = webdriver.Chrome(options=chrome_options, 
                               service=Service('/snap/bin/chromium.chromedriver'))
 else:
