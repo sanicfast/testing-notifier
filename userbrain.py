@@ -26,7 +26,7 @@ with open('realconfig.json') as jason: # format in fakeconfig.json
 email = config[user]['email']
 password = config[user]['ub_password']
 
-tgram_message(f'UserBrain: Script Starting! {email} {datetime.now()}')
+tgram_message(f'UserBrain: Script Starting! {email} {datetime.now().strftime('%I:%M %p')}')
 
 
 chrome_options = Options()

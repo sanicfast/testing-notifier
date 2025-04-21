@@ -25,7 +25,7 @@ with open('realconfig.json') as jason: # format in fakeconfig.json
 
 email = config[user]['email']
 password = config[user]['ut_password']
-tgram_message(f'UserTesting: Script starting! {email} {datetime.now}')
+tgram_message(f'UserTesting: Script starting! {email} {datetime.now().strftime('%I:%M %p')}')
 
 chrome_options = Options()
 chrome_options.add_argument("--headless")  # Run headless
