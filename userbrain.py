@@ -12,7 +12,7 @@ import json
 import sys
 import platform
 
-print('userbrain',datetime.now())
+print('userbrain',datetime.now().strftime("%I:%M %p"))
 
 if len(sys.argv) < 2:
     print("Usage: python userbrain.py <name>")
@@ -26,7 +26,7 @@ with open('realconfig.json') as jason: # format in fakeconfig.json
 email = config[user]['email']
 password = config[user]['ub_password']
 
-tgram_message(f'UserBrain: Script Starting! {email} {datetime.now().strftime('%I:%M %p')}')
+tgram_message(f'UserBrain: Script Starting! {email} {datetime.now().strftime("%I:%M %p")}')
 
 
 chrome_options = Options()
@@ -63,7 +63,7 @@ for char in password:
     time.sleep(random.uniform(0.01, 0.05))  
 time.sleep(random.uniform(0.5, 2))  # Pause before clicking
 
-print('ub: logging in')
+print(f'ub: logging in {email}')
 logon_button.click()
 time.sleep(5)
 last_chirp=0

@@ -12,7 +12,7 @@ import json
 import sys
 import platform
 
-print('usertesting',datetime.now())
+print('usertesting',datetime.now().strftime("%I:%M %p"))
 
 if len(sys.argv) < 2:
     print("Usage: python usertesting.py <name>")
@@ -25,7 +25,7 @@ with open('realconfig.json') as jason: # format in fakeconfig.json
 
 email = config[user]['email']
 password = config[user]['ut_password']
-tgram_message(f'UserTesting: Script starting! {email} {datetime.now().strftime('%I:%M %p')}')
+tgram_message(f'UserTesting: Script starting! {email} {datetime.now().strftime("%I:%M %p")}')
 
 chrome_options = Options()
 chrome_options.add_argument("--headless")  # Run headless
@@ -91,7 +91,7 @@ while datetime.now().hour<23:
         print('waiting a bit for kristine to check it out', formatted_time, email)
         time.sleep(5*60) # 5 mins
     else:
-        print(f'ut: nothing rn... {formatted_time} {email}')
+        print(f'ut: nothing rn... {formatted_time} {user}')
 
     driver.refresh()
     time.sleep(10+random.uniform(0.5, 2))  
