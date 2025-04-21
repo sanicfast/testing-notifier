@@ -6,8 +6,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
-from pushbullet import Pushbullet 
 from datetime import datetime  # Import datetime module
+from telegram_bot_message import tgram_message
 import json
 import sys
 import platform
@@ -25,9 +25,9 @@ with open('realconfig.json') as jason: # format in fakeconfig.json
 
 email = config[user]['email']
 password = config[user]['ub_password']
-pb = Pushbullet(config['PB_API_KEY'])
 
-pb.push_note(f'UserBrain', f'Script Starting! {email} {datetime.now()}')
+tgram_message(f'UserBrain: Script Starting! {email} {datetime.now()}')
+
 
 chrome_options = Options()
 chrome_options.add_argument("--headless")  # Run headless
@@ -76,25 +76,27 @@ while datetime.now().hour<23:
 
     test_page = 'https://tester.userbrain.com/dashboard'
     if driver.current_url!=test_page:
-        pb.push_note('Userbrain Script Error!',f'''Unexpected URL: {driver.current_url}\nExpected: {test_page}, {user}''')
+        tgram_message(f'''Userbrain Script Error: Unexpected URL: {driver.current_url}\n
+                        Expected: {test_page}\n {user}''')
         raise Exception(f'''Unexpected URL: {driver.current_url}\nExpected: {test_page}, {user}''')
     
     no_tests_elements = driver.find_elements(By.XPATH, "//div[@class='tiles__tile' and .//img[@src='https://tester.userbrain.com/img/no-test.png']]")
     formatted_time = datetime.now().strftime('%I:%M %p')  # Format time as 12-hour clock with AM/PM
     if len(no_tests_elements)==0:
-        print('woah we have a test??')
-        pb.push_note(f'UserBrain',f'{formatted_time}: {email}')
+        print(f'UserBrain: {formatted_time}: {email}')
+        tgram_message(f'UserBrain: {formatted_time}: {email}')
         print('waiting a bit for kristine to check it out', formatted_time)
         time.sleep(5*60) # 5 mins
     else:
-        print(f'nothing rn... {formatted_time}')
+        print(f'ub: nothing rn... {formatted_time} {user}')
 
     driver.refresh()
     time.sleep(10+random.uniform(0.5, 2))  
     if last_chirp + 3 <= datetime.now().hour:
         last_chirp=datetime.now().hour
-        pb.push_note(f'UserBrain {email}','still running!')
+        tgram_message(f'UserBrain {email} still running!')
 else:
-    print('terminating because it is bedtime')
+    tgram_message(f'UserBrain {email}: terminating because it is bedtime!')
+    print(f'UserBrain {email}: terminating because it is bedtime!')
    
 driver.quit()

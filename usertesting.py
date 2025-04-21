@@ -6,13 +6,13 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
-from pushbullet import Pushbullet 
 from datetime import datetime  # Import datetime module
+from telegram_bot_message import tgram_message
 import json
 import sys
 import platform
 
-print(datetime.now())
+print('usertesting',datetime.now())
 
 if len(sys.argv) < 2:
     print("Usage: python usertesting.py <name>")
@@ -25,8 +25,7 @@ with open('realconfig.json') as jason: # format in fakeconfig.json
 
 email = config[user]['email']
 password = config[user]['ut_password']
-pb = Pushbullet(config['PB_API_KEY'])
-pb.push_note(f'UserTesting',f'Script starting! {email} {datetime.now}')
+tgram_message(f'UserTesting: Script starting! {email} {datetime.now}')
 
 chrome_options = Options()
 chrome_options.add_argument("--headless")  # Run headless
@@ -66,7 +65,7 @@ for char in password:
 
 time.sleep(random.uniform(0.5, 2))  # Pause before clicking
 
-print('ut: logging in')
+print(f'ut: logging in {email}')
 logon_button.click()
 # driver.get("https://app.usertesting.com/my_dashboard/available_tests_v3") #it goes there automatically
 
@@ -80,25 +79,26 @@ while datetime.now().hour<23:
         continue
     test_page = 'https://app.usertesting.com/my_dashboard/available_tests_v3'
     if driver.current_url!=test_page:
-        pb.push_note('UserTesting Script Error!',f'''Unexpected URL: {driver.current_url}\nExpected: {test_page}, {user}''')
+        tgram_message(f'''UserTesting Script Error!\nUnexpected URL: {driver.current_url}\nExpected: {test_page}, {user}''')
         raise Exception(f'''Unexpected URL: {driver.current_url}\nExpected: {test_page}, {user}''')
 
     tests = driver.find_elements(By.CLASS_NAME, "available-tests__tile")
     test_count = len(tests)
     formatted_time = datetime.now().strftime('%I:%M %p')  # Format time as 12-hour clock with AM/PM
     if test_count>0:
-        print(f"Found {test_count} test(s) available!")        
-        pb.push_note(f'UserTesting: {test_count}',f'{formatted_time}: {email}')
-        print('waiting a bit for kristine to check it out', formatted_time)
+        print(f'UserTesting: {test_count} {formatted_time}: {email}')       
+        tgram_message(f'UserTesting: {test_count} {formatted_time}: {email}')
+        print('waiting a bit for kristine to check it out', formatted_time, email)
         time.sleep(5*60) # 5 mins
     else:
-        print(f'nothing rn... {formatted_time}')
+        print(f'ut: nothing rn... {formatted_time} {email}')
 
     driver.refresh()
     time.sleep(10+random.uniform(0.5, 2))  
     if last_chirp + 3 <= datetime.now().hour:
         last_chirp=datetime.now().hour
-        pb.push_note(f'UserTesting {email}','still running!')
+        tgram_message(f'UserTesting {email}','still running!')
 else:
-    print('terminating because its time to go to bed')
+    tgram_message(f'UserTesting {email}: terminating because it is bedtime!')
+    print(f'UserTesting {email}: terminating because it is bedtime!')
 driver.quit()

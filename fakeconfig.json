@@ -1,5 +1,7 @@
 {
     "PB_API_KEY":"your pushbullet api key here",
+    "TG_BOT_KEY":"telegram bot key (ask @botfather)",
+    "TG_USERID":"telegram userid (ask @userinfobot)",
     "tom_creds":
         {"email":"email@email.com",
         "ut_password":"usertesting_pw",
