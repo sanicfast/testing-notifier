@@ -6,7 +6,7 @@ with open('realconfig.json') as jason: # format in fakeconfig.json
     config = json.load(jason)
 
 BOT_TOKEN = config['TG_BOT_KEY']
-CHAT_ID = config['TG_USERID_tom']
+CHAT_ID = config['TG_USERID']
 
 def tgram_message(message, BOT_TOKEN = BOT_TOKEN, CHAT_ID = CHAT_ID):
     async def send_message(message):
