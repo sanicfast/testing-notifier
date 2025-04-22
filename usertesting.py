@@ -97,7 +97,7 @@ while datetime.now().hour<23:
     time.sleep(10+random.uniform(0.5, 2))  
     if last_chirp + 3 <= datetime.now().hour:
         last_chirp=datetime.now().hour
-        tgram_message(f'UserTesting {email}','still running!')
+        tgram_message(f'UserTesting {email} still running!')
 else:
     tgram_message(f'UserTesting {email}: terminating because it is bedtime!')
     print(f'UserTesting {email}: terminating because it is bedtime!')
